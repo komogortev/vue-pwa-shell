@@ -1,0 +1,30 @@
+---
+description: Workspace context for the pwa-shell template — applies every session
+alwaysApply: true
+---
+
+# pwa-shell — Workspace Context
+
+## Role of This Project
+This is the **shell host template** of the `@base` ecosystem. It is a GitHub Template Repository — all consumer projects are forks of this repo.
+
+## Ecosystem Topology
+```
+e:/Projects/
+  BASE/pwa-shell/        ← THIS repo — Vue 3 PWA shell, hosts mountable modules
+  SHARED/packages/       ← @base/* packages published to GitHub Packages
+    engine-core/         ← mount contract, EventBus, BaseModule, ShellContext
+    ui/                  ← Vue 3 component library
+    pwa-core/            ← service worker, offline utilities
+  <project-name>/        ← forks of this repo — each builds one game project
+```
+
+## Code Placement Rules
+- Reusable across projects → extract to `SHARED/packages/` and publish as `@base/*`
+- Specific to this shell or a fork → stay in this repo
+- New forks must copy `.cursor/rules/` from this template and update the workspace context section
+
+## Stack
+Vue 3 · TypeScript strict · Tailwind CSS · Vue Router · Pinia · Vite · Vitest
+Backend: Node.js · Zod validation · layered architecture (routes → services → repositories)
+Modules: `@base/engine-core` mount contract — all interactive modules implement `EngineModule`
