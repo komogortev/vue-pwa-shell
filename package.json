@@ -18,9 +18,13 @@
     "vue-router": "^4.4.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "vue-demi"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "vue-demi"
+    ]
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "@vitejs/plugin-vue": "^5.2.0",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.0",
