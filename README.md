@@ -1,77 +1,63 @@
 # vue-pwa-shell
 
-**Vue 3 + Vite + PWA** application shell used as a **template** for `@base` ecosystem apps: Vue Router, Pinia, Tailwind, and [`@base/engine-core`](https://github.com/komogortev/vue-three-base-packages) for modular engine hosting (`ThreeModule`, child modules, `EventBus`).
+A Vue 3 + TypeScript + Vite PWA starter for apps that host an engine module, such as a Three.js game. It
+provides routing, a service worker, a Pinia store, and a mount/unmount contract for engine modules from
+[`@base/engine-core`](https://github.com/komogortev/vue-three-base-packages). It contains no game logic. The
+[threejs-engine-dev](https://github.com/komogortev/threejs-engine-dev) editor and
+the `three-dreams` game started from this shell.
 
-**Public repository:** [github.com/komogortev/vue-pwa-shell](https://github.com/komogortev/vue-pwa-shell)
+## What is in it
 
----
+- **Routes:** menu, game and settings views (`vue-router`, lazy-loaded), with unknown paths redirecting to the menu.
+- **Module mounting:** `ModuleMount.vue` mounts and unmounts any `EngineModule` into a container.
+  `MockModule` is a placeholder that shows the engine slot is wired; replace it with a real module such as
+  `ThreeModule` from `@base/threejs-engine`.
+- **Shell store:** a Pinia store holding the active module and the locale.
+- **Platform adapter:** a `PlatformAdapter` interface (storage, `openExternal`, optional Steam hooks) with a
+  web implementation, so the same shell can target a desktop wrapper later. `pnpm build:electron` builds
+  without the service worker; no Electron wrapper is included.
+- **PWA:** `vite-plugin-pwa` generates the service worker and web manifest at build time.
+- **Tailwind CSS** baseline.
 
-## What this template provides
+## Run it
 
-- Vite 6 + `vite-plugin-pwa` (manifest, service worker registration)  
-- Vue 3 + `vue-router` + Pinia  
-- Tailwind CSS baseline  
-- Dependency on **`@base/engine-core`** for shell/module lifecycle  
-
-Use it as a **GitHub template** or fork when starting a new PWA that mounts engine children (e.g. `@base/threejs-engine`).
-
----
-
-## Repository layout (important)
-
-`package.json` currently resolves **`@base/engine-core`** with:
-
-```json
-"@base/engine-core": "link:../../SHARED/packages/engine-core"
-```
-
-That assumes this folder layout **on your machine**:
+Needs Node 20 or newer and pnpm 9 or newer. The shell links `@base/engine-core` from a sibling checkout
+(`"@base/engine-core": "link:../../SHARED/packages/engine-core"`), so arrange the folders like this:
 
 ```text
-your-projects/
-  SHARED/                    # clone: github.com/komogortev/vue-three-base-packages
-    packages/
-      engine-core/
+workspace/
+  SHARED/        # github.com/komogortev/vue-three-base-packages
   BASE/
-    pwa-shell/               # this template (vue-pwa-shell)
+    pwa-shell/   # this repository
 ```
 
-1. Clone **[vue-three-base-packages](https://github.com/komogortev/vue-three-base-packages)** and run `pnpm install && pnpm build` there.  
-2. Clone or copy **vue-pwa-shell** under `BASE/pwa-shell` (or adjust the `link:` path to your layout).  
-3. From `pwa-shell`: `pnpm install` → `pnpm dev`.
+```bash
+cd SHARED && pnpm install && pnpm build   # builds the @base/* packages
+cd ../BASE/pwa-shell && pnpm install && pnpm dev
+```
 
-**Standalone clone** of *only* `vue-pwa-shell` (without `SHARED` beside it) will **not** satisfy `link:` until you either change the dependency to a **published** `@base/engine-core` version (GitHub Packages / npm) or clone the packages repo alongside this app.
-
----
+A clone of this repository on its own will not install until the `link:` path points at a checkout of the
+packages repo, or at a published `@base/engine-core` version.
 
 ## Scripts
 
-| Command | Purpose |
-|--------|---------|
+| Command | What it does |
+|--------|--------------|
 | `pnpm dev` | Vite dev server |
-| `pnpm build` | Production build + typecheck |
-| `pnpm preview` | Preview production build |
-| `pnpm typecheck` | `vue-tsc --noEmit` |
-| `pnpm test` | Vitest |
+| `pnpm build` | Type-check (`vue-tsc -b`) and production build |
+| `pnpm build:electron` | The same build without the service worker |
+| `pnpm preview` | Preview the production build |
 
----
+## Deploying to GitHub Pages
 
-## GitHub configuration
-
-| Concern | This template |
-|--------|----------------|
-| **GitHub Pages** | **Optional.** Not configured by default. If you add Pages, use a **Vite `base`** matching your project URL (e.g. `/vue-pwa-shell/`) and build `dist/` in CI—same pattern as [threejs-engine-dev](https://github.com/komogortev/threejs-engine-dev). |
-| **GitHub Actions** | Add workflows as needed (lint, build, deploy). No workflow is required for the template itself. |
-
----
+Pages is not configured. If you add it, set the Vite `base` to your project path (for example
+`/vue-pwa-shell/`) and build `dist/` in CI, as [threejs-engine-dev](https://github.com/komogortev/threejs-engine-dev) does.
 
 ## Related repositories
 
-- **[vue-three-base-packages](https://github.com/komogortev/vue-three-base-packages)** — `@base/*` shared libraries  
-- **[threejs-engine-dev](https://github.com/komogortev/threejs-engine-dev)** — Three.js editor/scene harness built on the same stack  
-
----
+- [vue-three-base-packages](https://github.com/komogortev/vue-three-base-packages): the `@base/*` libraries
+- [threejs-engine-dev](https://github.com/komogortev/threejs-engine-dev): a Three.js scene editor built on this shell and those packages
 
 ## License
 
-As specified by the repository owner (add a `LICENSE` file for a public default).
+[MIT](./LICENSE).
