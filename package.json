@@ -8,7 +8,7 @@
     "build": "vue-tsc -b && vite build",
     "build:electron": "vue-tsc -b && vite build --mode electron",
     "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "vue-tsc -b",
     "test": "vitest"
   },
   "dependencies": {
